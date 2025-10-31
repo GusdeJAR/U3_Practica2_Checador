@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:u3_practica2_checador/principal.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
-void main() {
-  runApp(const MyApp());
+Future <void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('es_ES', null);
+  runApp(MaterialApp(
+      home: AppP02C(),
+      debugShowCheckedModeBanner: false
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
