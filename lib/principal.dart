@@ -59,13 +59,17 @@ class _AppP02CState extends State<AppP02C> {
     );
   }
   Widget formularioDetalleProfesor(){
-    return Column(
+    return Padding(
+      padding: EdgeInsets.all(30),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SizedBox(
           child: Column(
             children: [
               Text(
-                "N: $nprofesor"
+                "NP: $nprofesor"
               ),
               SizedBox(height: 8),
               TextField(
@@ -208,41 +212,42 @@ class _AppP02CState extends State<AppP02C> {
                 }
             )
         ),*/
-      ],
-    ),
-    ),
-    ]
+        ],
+       ),
+       ),
+      ]
+      )
+      )
     );
   }
   Widget formularioDetalleAsistencia(){
-    return Center(
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              child: Column(
-                children: [
-                  Text(
-                    'ID: $idasistencia'
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                      'NHorario: $nhorario'
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                      'Fecha: ${fecha}'
-                  ),
-                  SizedBox(height: 8),
-                  OutlinedButton(
-                    onPressed: () => _mostrarDialogoDeFecha(context),
-                    child: Text("Seleccionar fecha"),
-                  ),
-                  SizedBox(height: 8),
-                  Text('Asistencia: $asistencia'),
-                  SizedBox(height: 16),
-                  OutlinedButton(onPressed: (){}, child: Text("Insertar")),
-                  /* Row(
+    return Padding(
+      padding: EdgeInsets.all(30),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+                    Text(
+                        'ID: $idasistencia'
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                        'NHorario: $nhorario'
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                        'Fecha: ${fecha}'
+                    ),
+                    SizedBox(height: 8),
+                    OutlinedButton(
+                      onPressed: () => _mostrarDialogoDeFecha(context),
+                      child: Text("Seleccionar fecha"),
+                    ),
+                    SizedBox(height: 8),
+                    Text('Asistencia: $asistencia'),
+                    SizedBox(height: 16),
+                    OutlinedButton(onPressed: (){}, child: Text("Insertar")),
+                    /* Row(
                   children: [
                     FilledButton(
                         onPressed: (){
@@ -307,7 +312,7 @@ class _AppP02CState extends State<AppP02C> {
               ],
             ),
           ),*/
-                  /*Expanded(
+                    /*Expanded(
               child: ListView.builder(
                   itemCount: datos1.length,
                   itemBuilder: (context,contador){
@@ -366,344 +371,342 @@ class _AppP02CState extends State<AppP02C> {
                   }
               )
           ),*/
-                ],
-              ),
-            ),
-          ]
+        ]
       ),
+    ),
     );
   }
   Widget formularioDetalleMateria(){
-    return Column(
-      children: [
-        SizedBox(
-          child: Column(
-            children: [
-              Text(
-                'N: $nmat'
-              ),
-              SizedBox(height: 8),
-              TextField(
-                controller: descripcion,
-                decoration: InputDecoration(
-                    labelText: "Descripción:"
-                ),
-                maxLines: null,
-              ),
-              SizedBox(height: 16),
-              OutlinedButton(onPressed: (){}, child: Text("Insertar")),
-             /*
-              Row(
-                children: [
-                  FilledButton(
-                      onPressed: (){
-                        Automovil a= Automovil(
-                            placa: placa.text,
-                            marca: marca.text,
-                            modelo: modelo.text,
-                            anio: int.parse(anio.text),
-                            costo: double.parse(costo.text)
-                        );
-                        DB.insertar(a).then((respuesta){ //Then espera por una promesa para que se realice.
-                          if(respuesta<=0){
-                            setState(() {
-                              titulo="No se insertó debidamente";
-                            });
-                          }else{
-                            setState(() {
-                              titulo="Se insertó el automóvil correctamente: $respuesta";
-                            });
-                          }
-                          actualizarLista();
-                        });
-                      },
-                      child: Text("Insertar")
+    return Padding(
+      padding: EdgeInsets.all(30),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+                  Text(
+                    'NMat: $nmat'
                   ),
-                  FilledButton(
-                      onPressed: (){
-                        placa.text="";
-                        marca.text="";
-                        modelo.text="";
-                        anio.text="";
-                        costo.text="";
-                      },
-                      child: Text("Limpiar")
-                  ),
-                  FilledButton(
-                      onPressed: (){
-                        Automovil a= Automovil(
-                            placa: placa.text,
-                            marca: marca.text,
-                            modelo: modelo.text,
-                            anio: int.parse(anio.text),
-                            costo: double.parse(costo.text)
-                        );
-                        DB.actualizar(a).then((respuesta){ //Then espera por una promisa para que se realice.
-                          if(respuesta<=0){
-                            setState(() {
-                              titulo="No se actualizó debidamente";
-                            });
-                          }else{
-                            setState(() {
-                              titulo="Se actualizó correctamente: $respuesta";
-                            });
-                          }
-                          actualizarLista();
-                        });
-                      },
-                      child: Text("Actualizar")
-                  ),
-                ],
-              )
-            ],
-          ),
-        ),*/
-      /*  Expanded(
-            child: ListView.builder(
-                itemCount: datos.length,
-                itemBuilder: (context,contador){
-                  return ListTile(
-                    title: Text(datos[contador].modelo),
-                    subtitle: Text(datos[contador].placa),
-                    leading: CircleAvatar(
-                      child: Text(contador.toString()),
+                  SizedBox(height: 8),
+                  TextField(
+                    controller: descripcion,
+                    decoration: InputDecoration(
+                        labelText: "Descripción:"
                     ),
-                    trailing: IconButton(
-                        onPressed: (){
-                          //ALERT DIALOG PARA ELIMINAR
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text("Confirmación de eliminación"),
-                                content: Text("¿Estás seguro que quieres eliminar este registro?"),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      setState(() {
-                                        DB.eliminar(datos[contador].placa).then((respuesta){
-                                          actualizarLista();
-                                        });
-                                      });
+                    maxLines: null,
+                  ),
+                  SizedBox(height: 16),
+                  OutlinedButton(onPressed: (){}, child: Text("Insertar")),
+                 /*
+                  Row(
+                    children: [
+                      FilledButton(
+                          onPressed: (){
+                            Automovil a= Automovil(
+                                placa: placa.text,
+                                marca: marca.text,
+                                modelo: modelo.text,
+                                anio: int.parse(anio.text),
+                                costo: double.parse(costo.text)
+                            );
+                            DB.insertar(a).then((respuesta){ //Then espera por una promesa para que se realice.
+                              if(respuesta<=0){
+                                setState(() {
+                                  titulo="No se insertó debidamente";
+                                });
+                              }else{
+                                setState(() {
+                                  titulo="Se insertó el automóvil correctamente: $respuesta";
+                                });
+                              }
+                              actualizarLista();
+                            });
+                          },
+                          child: Text("Insertar")
+                      ),
+                      FilledButton(
+                          onPressed: (){
+                            placa.text="";
+                            marca.text="";
+                            modelo.text="";
+                            anio.text="";
+                            costo.text="";
+                          },
+                          child: Text("Limpiar")
+                      ),
+                      FilledButton(
+                          onPressed: (){
+                            Automovil a= Automovil(
+                                placa: placa.text,
+                                marca: marca.text,
+                                modelo: modelo.text,
+                                anio: int.parse(anio.text),
+                                costo: double.parse(costo.text)
+                            );
+                            DB.actualizar(a).then((respuesta){ //Then espera por una promisa para que se realice.
+                              if(respuesta<=0){
+                                setState(() {
+                                  titulo="No se actualizó debidamente";
+                                });
+                              }else{
+                                setState(() {
+                                  titulo="Se actualizó correctamente: $respuesta";
+                                });
+                              }
+                              actualizarLista();
+                            });
+                          },
+                          child: Text("Actualizar")
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),*/
+          /*  Expanded(
+                child: ListView.builder(
+                    itemCount: datos.length,
+                    itemBuilder: (context,contador){
+                      return ListTile(
+                        title: Text(datos[contador].modelo),
+                        subtitle: Text(datos[contador].placa),
+                        leading: CircleAvatar(
+                          child: Text(contador.toString()),
+                        ),
+                        trailing: IconButton(
+                            onPressed: (){
+                              //ALERT DIALOG PARA ELIMINAR
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Confirmación de eliminación"),
+                                    content: Text("¿Estás seguro que quieres eliminar este registro?"),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          setState(() {
+                                            DB.eliminar(datos[contador].placa).then((respuesta){
+                                              actualizarLista();
+                                            });
+                                          });
 
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(content: Text("Registro eliminado"))
-                                      );
-                                    },
-                                    child: Text("Sí"),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text("No"),
-                                  ),
-                                ],
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(content: Text("Registro eliminado"))
+                                          );
+                                        },
+                                        child: Text("Sí"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("No"),
+                                      ),
+                                    ],
+                                  );
+                                },
                               );
                             },
-                          );
+                            icon: Icon(Icons.delete)
+                        ),
+                        onTap: (){
+                          placa.text=datos[contador].placa;
+                          marca.text=datos[contador].marca;
+                          modelo.text=datos[contador].modelo;
+                          anio.text=datos[contador].anio.toString();
+                          costo.text=datos[contador].costo.toString();
                         },
-                        icon: Icon(Icons.delete)
-                    ),
-                    onTap: (){
-                      placa.text=datos[contador].placa;
-                      marca.text=datos[contador].marca;
-                      modelo.text=datos[contador].modelo;
-                      anio.text=datos[contador].anio.toString();
-                      costo.text=datos[contador].costo.toString();
-                    },
-                  );
-                }
-            );
-        ),*/
-            ]
-          ),
-        )
-      ],
+                      );
+                    }
+                );
+            ),*/
+          ],
+        ),
+      ),
     );
   }
   Widget formularioDetalleHorario(){
-    return Column(
-      children: [
-        SizedBox(
-          child: Column(
-            children: [
-              Text(
-                'NHorario: $nhorario'
-              ),
-              SizedBox(height: 8),
-              Text(
-                'NProfesor: $nprofesor'
-              ),
-              SizedBox(height: 8),
-              Text(
-                'NMat: $nmat'
-              ),
-              SizedBox(height: 8),
-              Text(
-                'Hora seleccionada: ${hora!.format(context) ?? TimeOfDay.now().format(context)}',
-              ),
-              SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: () {
-                  // Aquí llamaremos a la función que muestra el selector
-                  _mostrarSelectorDeHora(context);
-                },
-                child:  Text('Seleccionar Hora'),
-              ),
-              SizedBox(height: 8),
-              DropdownButtonFormField<String>(
-                value: itemSeleccionadoE,
-                hint: Text("Seleccione un edificio:"),
-                items: edificio.map((n) {
-                  return DropdownMenuItem(value: n, child: Text(n));
-                }).toList(),
-                onChanged: (String? x) {
-                  if (x != null) setState(() => itemSeleccionadoE = x);
-                },
-              ),
-              SizedBox(height: 8),
-              DropdownButtonFormField<int>(
-                value: itemSeleccionadoS,
-                hint: Text("Seleccione un salón:"),
-                items: salon.map((n) {
-                  return DropdownMenuItem(value: n, child: Text('${n}'));
-                }).toList(),
-                onChanged: (int? x) {
-                  if (x != null) setState(() => itemSeleccionadoS = x);
-                },
-              ),
-              SizedBox(height: 16),
-              OutlinedButton(onPressed: (){}, child: Text("Insertar")),
-            /*  Row(
+    return Padding(
+      padding: EdgeInsets.all(30),
+      child: SingleChildScrollView(
+        child: Column(
                 children: [
-                  FilledButton(
-                      onPressed: (){
-                        Automovil a= Automovil(
-                            placa: placa.text,
-                            marca: marca.text,
-                            modelo: modelo.text,
-                            anio: int.parse(anio.text),
-                            costo: double.parse(costo.text)
-                        );
-                        DB.insertar(a).then((respuesta){ //Then espera por una promesa para que se realice.
-                          if(respuesta<=0){
-                            setState(() {
-                              titulo="No se insertó debidamente";
-                            });
-                          }else{
-                            setState(() {
-                              titulo="Se insertó el automóvil correctamente: $respuesta";
-                            });
-                          }
-                          actualizarLista();
-                        });
-                      },
-                      child: Text("Insertar")
+                  Text(
+                    'NHorario: $nhorario'
                   ),
-                  FilledButton(
-                      onPressed: (){
-                        placa.text="";
-                        marca.text="";
-                        modelo.text="";
-                        anio.text="";
-                        costo.text="";
-                      },
-                      child: Text("Limpiar")
+                  SizedBox(height: 8),
+                  Text(
+                    'NProfesor: $nprofesor'
                   ),
-                  FilledButton(
-                      onPressed: (){
-                        Automovil a= Automovil(
-                            placa: placa.text,
-                            marca: marca.text,
-                            modelo: modelo.text,
-                            anio: int.parse(anio.text),
-                            costo: double.parse(costo.text)
-                        );
-                        DB.actualizar(a).then((respuesta){ //Then espera por una promisa para que se realice.
-                          if(respuesta<=0){
-                            setState(() {
-                              titulo="No se actualizó debidamente";
-                            });
-                          }else{
-                            setState(() {
-                              titulo="Se actualizó correctamente: $respuesta";
-                            });
-                          }
-                          actualizarLista();
-                        });
-                      },
-                      child: Text("Actualizar")
+                  SizedBox(height: 8),
+                  Text(
+                    'NMat: $nmat'
                   ),
+                  SizedBox(height: 8),
+                  Text(
+                    hora != null
+                        ? 'Hora seleccionada: ${hora!.format(context)}'
+                        : 'Hora: (No seleccionada)',
+                  ),
+                  SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Aquí llamaremos a la función que muestra el selector
+                      _mostrarSelectorDeHora(context);
+                    },
+                    child:  Text('Seleccionar Hora'),
+                  ),
+                  SizedBox(height: 8),
+                  DropdownButtonFormField<String>(
+                    value: itemSeleccionadoE,
+                    hint: Text("Seleccione un edificio:"),
+                    items: edificio.map((n) {
+                      return DropdownMenuItem(value: n, child: Text(n));
+                    }).toList(),
+                    onChanged: (String? x) {
+                      if (x != null) setState(() => itemSeleccionadoE = x);
+                    },
+                  ),
+                  SizedBox(height: 8),
+                  DropdownButtonFormField<int>(
+                    value: itemSeleccionadoS,
+                    hint: Text("Seleccione un salón:"),
+                    items: salon.map((n) {
+                      return DropdownMenuItem(value: n, child: Text('${n}'));
+                    }).toList(),
+                    onChanged: (int? x) {
+                      if (x != null) setState(() => itemSeleccionadoS = x);
+                    },
+                  ),
+                  SizedBox(height: 16),
+                  OutlinedButton(onPressed: (){}, child: Text("Insertar")),
+                /*  Row(
+                    children: [
+                      FilledButton(
+                          onPressed: (){
+                            Automovil a= Automovil(
+                                placa: placa.text,
+                                marca: marca.text,
+                                modelo: modelo.text,
+                                anio: int.parse(anio.text),
+                                costo: double.parse(costo.text)
+                            );
+                            DB.insertar(a).then((respuesta){ //Then espera por una promesa para que se realice.
+                              if(respuesta<=0){
+                                setState(() {
+                                  titulo="No se insertó debidamente";
+                                });
+                              }else{
+                                setState(() {
+                                  titulo="Se insertó el automóvil correctamente: $respuesta";
+                                });
+                              }
+                              actualizarLista();
+                            });
+                          },
+                          child: Text("Insertar")
+                      ),
+                      FilledButton(
+                          onPressed: (){
+                            placa.text="";
+                            marca.text="";
+                            modelo.text="";
+                            anio.text="";
+                            costo.text="";
+                          },
+                          child: Text("Limpiar")
+                      ),
+                      FilledButton(
+                          onPressed: (){
+                            Automovil a= Automovil(
+                                placa: placa.text,
+                                marca: marca.text,
+                                modelo: modelo.text,
+                                anio: int.parse(anio.text),
+                                costo: double.parse(costo.text)
+                            );
+                            DB.actualizar(a).then((respuesta){ //Then espera por una promisa para que se realice.
+                              if(respuesta<=0){
+                                setState(() {
+                                  titulo="No se actualizó debidamente";
+                                });
+                              }else{
+                                setState(() {
+                                  titulo="Se actualizó correctamente: $respuesta";
+                                });
+                              }
+                              actualizarLista();
+                            });
+                          },
+                          child: Text("Actualizar")
+                      ),
+                    ],
+                  )
                 ],
-              )
-            ],
-          ),
-        ),
-        Expanded(
-            child: ListView.builder(
-                itemCount: datos.length,
-                itemBuilder: (context,contador){
-                  return ListTile(
-                    title: Text(datos[contador].modelo),
-                    subtitle: Text(datos[contador].placa),
-                    leading: CircleAvatar(
-                      child: Text(contador.toString()),
-                    ),
-                    trailing: IconButton(
-                        onPressed: (){
-                          //ALERT DIALOG PARA ELIMINAR
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text("Confirmación de eliminación"),
-                                content: Text("¿Estás seguro que quieres eliminar este registro?"),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      setState(() {
-                                        DB.eliminar(datos[contador].placa).then((respuesta){
-                                          actualizarLista();
-                                        });
-                                      });
+              ),
+            ),
+            Expanded(
+                child: ListView.builder(
+                    itemCount: datos.length,
+                    itemBuilder: (context,contador){
+                      return ListTile(
+                        title: Text(datos[contador].modelo),
+                        subtitle: Text(datos[contador].placa),
+                        leading: CircleAvatar(
+                          child: Text(contador.toString()),
+                        ),
+                        trailing: IconButton(
+                            onPressed: (){
+                              //ALERT DIALOG PARA ELIMINAR
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Confirmación de eliminación"),
+                                    content: Text("¿Estás seguro que quieres eliminar este registro?"),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          setState(() {
+                                            DB.eliminar(datos[contador].placa).then((respuesta){
+                                              actualizarLista();
+                                            });
+                                          });
 
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(content: Text("Registro eliminado"))
-                                      );
-                                    },
-                                    child: Text("Sí"),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text("No"),
-                                  ),
-                                ],
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(content: Text("Registro eliminado"))
+                                          );
+                                        },
+                                        child: Text("Sí"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("No"),
+                                      ),
+                                    ],
+                                  );
+                                },
                               );
                             },
-                          );
+                            icon: Icon(Icons.delete)
+                        ),
+                        onTap: (){
+                          placa.text=datos[contador].placa;
+                          marca.text=datos[contador].marca;
+                          modelo.text=datos[contador].modelo;
+                          anio.text=datos[contador].anio.toString();
+                          costo.text=datos[contador].costo.toString();
                         },
-                        icon: Icon(Icons.delete)
-                    ),
-                    onTap: (){
-                      placa.text=datos[contador].placa;
-                      marca.text=datos[contador].marca;
-                      modelo.text=datos[contador].modelo;
-                      anio.text=datos[contador].anio.toString();
-                      costo.text=datos[contador].costo.toString();
-                    },
-                  );
-                }
-            )
-        ),*/
-      ]
-    ),
-        )
-    ],
+                      );
+                    }
+                )
+            ),*/
+          ]
+        ),
+      ),
     );
   }
   Future<void> _mostrarSelectorDeHora(BuildContext context) async {
@@ -728,7 +731,6 @@ class _AppP02CState extends State<AppP02C> {
       });
     }
   }
-
   void _mostrarDialogoDeFecha(BuildContext context) {
     showDialog(
       context: context,
