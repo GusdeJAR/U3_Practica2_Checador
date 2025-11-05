@@ -1,16 +1,13 @@
 # u3_practica2_checador
 
-A new Flutter project.
+Una aplicación con el objetivo de gestionar las distintas tareas que contiene un checador de asistencia de una escuela cualquiera,
+donde se puede consultar, agregar, editar, y eliminar profesores, materias, horarios, y asistencias. A su vez, hay una sección de
+consultas avanzadas donde se puede generar una vista que muestre las asistencias hechas bajo una hora y edificio, por fecha, y
+generar un resumen anual de todas las asistencias del año 2025. 
 
-## Getting Started
+## Paquetería empleada
+sqflite: Creación y manejo de la base de datos.
+intl: Da formato a las fechas obtenidas en el calendario.
+table_calendar: Widget para seleccionar fechas.
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

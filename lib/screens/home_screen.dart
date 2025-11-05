@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import '../widgets/custom_drawer.dart';
 import 'profesores_screen.dart';
 import 'materias_screen.dart';
 import 'horarios_screen.dart';
 import 'asistencia_screen.dart';
 import 'consultas_screen.dart';
-import '../widgets/bottom_nav_bar.dart';
 import '../database/database_helper.dart';
 import '../models/profesor.dart';
 import '../models/materia.dart';
 import '../models/horario.dart';
-import '../models/asistencia.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -167,24 +166,15 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: _buildCurrentScreen(),
-      bottomNavigationBar: CustomBottomNavBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
+      drawer: CustomDrawer(
+        onSelectItem: (index) {
+          Navigator.pop(context);
+            setState(() {
+              _currentIndex = index;
+            });
         },
       ),
-      floatingActionButton: _currentIndex == 4
-          ? FloatingActionButton(
-        onPressed: () {
-          _showAsistenciaBottomSheet(context);
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.blue[800],
-      )
-          : null,
+      body: _buildCurrentScreen(),
     );
   }
 
@@ -219,82 +209,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _showAsistenciaBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.8,
-        padding: EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Text(
-              'Registrar Asistencia - Hoy (${_getCurrentDate()})',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 20),
-            Expanded(
-              child: _clasesDeHoy.isEmpty
-                  ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.schedule, size: 64, color: Colors.grey),
-                    SizedBox(height: 16),
-                    Text(
-                      'No hay clases programadas para hoy',
-                      style: TextStyle(fontSize: 18, color: Colors.grey),
-                    ),
-                  ],
-                ),
-              )
-                  : ListView.builder(
-                itemCount: _clasesDeHoy.length,
-                itemBuilder: (context, index) => Card(
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: _clasesDeHoy[index]['asistio'] == true
-                          ? Colors.green
-                          : _clasesDeHoy[index]['asistio'] == false
-                          ? Colors.red
-                          : Colors.grey,
-                      child: Icon(
-                        _clasesDeHoy[index]['asistio'] == true
-                            ? Icons.check
-                            : _clasesDeHoy[index]['asistio'] == false
-                            ? Icons.close
-                            : Icons.question_mark,
-                        color: Colors.white,
-                      ),
-                    ),
-                    title: Text(_clasesDeHoy[index]['materia'] ?? 'Materia'),
-                    subtitle: Text('${_clasesDeHoy[index]['profesor'] ?? 'Profesor'} - ${_clasesDeHoy[index]['hora'] ?? 'Hora'}'),
-                    trailing: _clasesDeHoy[index]['asistio'] == null
-                        ? ElevatedButton(
-                      onPressed: () {
-                        // Lógica para registrar asistencia
-                      },
-                      child: Text('Registrar'),
-                    )
-                        : Text(
-                      _clasesDeHoy[index]['asistio'] == true ? 'Presente' : 'Ausente',
-                      style: TextStyle(
-                        color: _clasesDeHoy[index]['asistio'] == true ? Colors.green : Colors.red,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 class DashboardContent extends StatelessWidget {
