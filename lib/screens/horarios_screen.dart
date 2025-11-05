@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../models/horario.dart';
 import '../database/database_helper.dart';
 import '../models/profesor.dart';
@@ -16,11 +15,6 @@ class _HorariosScreenState extends State<HorariosScreen> {
   List<Horario> _horarios = [];
   List<Profesor> _profesores = [];
   List<Materia> _materias = [];
-  final formatoMascaraHora = MaskTextInputFormatter(
-      mask: '##:##',
-      filter: { "#": RegExp(r'[0-9]') },
-      type: MaskAutoCompletionType.lazy
-  );
 
 
   // Controladores para el formulario

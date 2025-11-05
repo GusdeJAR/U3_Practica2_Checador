@@ -19,12 +19,12 @@ class _ConsultasScreenState extends State<ConsultasScreen> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Consultas Avanzadas'),
+          title: Text('Consultas avanzadas'),
           bottom: TabBar(
             tabs: [
-              Tab(text: 'Por Hora/Edificio'),
-              Tab(text: 'Asistencia por Fecha'),
-              Tab(text: 'Resumen Asistencia'),
+              Tab(text: 'Por hora/edificio'),
+              Tab(text: 'Asistencia por fecha'),
+              Tab(text: 'Resumen asistencia anual'),
             ],
           ),
         ),
