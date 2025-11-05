@@ -4,7 +4,6 @@ import 'materias_screen.dart';
 import 'horarios_screen.dart';
 import 'asistencia_screen.dart';
 import 'consultas_screen.dart';
-import '../widgets/custom_drawer.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../database/database_helper.dart';
 import '../models/profesor.dart';
@@ -32,17 +31,17 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _loadDashboardData();
+    _cargarDashboardData();
   }
 
-  Future<void> _loadDashboardData() async {
-    await _loadTotales();
-    await _loadAsistenciasHoy();
-    await _loadProximasClases();
-    await _loadClasesDeHoy();
+  Future<void> _cargarDashboardData() async {
+    await _cargasTotales();
+    await _cargarAsistenciasHoy();
+    await _cargarProximasClases();
+    await _cargarClasesDeHoy();
   }
 
-  Future<void> _loadTotales() async {
+  Future<void> _cargasTotales() async {
     final profesores = await _databaseHelper.getProfesores();
     final materias = await _databaseHelper.getMaterias();
 
@@ -52,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<void> _loadAsistenciasHoy() async {
+  Future<void> _cargarAsistenciasHoy() async {
     final hoy = _getCurrentDate();
     final asistencias = await _databaseHelper.getAsistencias();
 
@@ -65,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<void> _loadProximasClases() async {
+  Future<void> _cargarProximasClases() async {
     final horarios = await _databaseHelper.getHorarios();
     final profesores = await _databaseHelper.getProfesores();
     final materias = await _databaseHelper.getMaterias();
@@ -98,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<void> _loadClasesDeHoy() async {
+  Future<void> _cargarClasesDeHoy() async {
     final hoy = _getCurrentDate();
     final asistencias = await _databaseHelper.getAsistencias();
     final horarios = await _databaseHelper.getHorarios();
@@ -164,25 +163,9 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.refresh),
-            onPressed: _loadDashboardData,
+            onPressed: _cargarDashboardData,
           ),
         ],
-      ),
-      drawer: CustomDrawer(
-        onSelectItem: (index) {
-          Navigator.pop(context);
-
-          if (index == 5) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ConsultasScreen()),
-            );
-          } else {
-            setState(() {
-              _currentIndex = index;
-            });
-          }
-        },
       ),
       body: _buildCurrentScreen(),
       bottomNavigationBar: CustomBottomNavBar(
@@ -232,7 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
       faltasHoy: _faltasHoy,
       proximasClases: _proximasClases,
       clasesDeHoy: _clasesDeHoy,
-      onRefresh: _loadDashboardData,
+      onRefresh: _cargarDashboardData,
     );
   }
 

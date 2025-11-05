@@ -38,6 +38,10 @@ class CustomBottomNavBar extends StatelessWidget {
           icon: Icon(Icons.assignment),
           label: 'Asistencia',
         ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.search),
+          label: 'Consultas',
+        ),
       ],
     );
   }

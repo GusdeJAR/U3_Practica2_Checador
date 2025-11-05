@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../models/horario.dart';
 import '../database/database_helper.dart';
 import '../models/profesor.dart';
@@ -14,6 +16,12 @@ class _HorariosScreenState extends State<HorariosScreen> {
   List<Horario> _horarios = [];
   List<Profesor> _profesores = [];
   List<Materia> _materias = [];
+  final formatoMascaraHora = MaskTextInputFormatter(
+      mask: '##:##',
+      filter: { "#": RegExp(r'[0-9]') },
+      type: MaskAutoCompletionType.lazy
+  );
+
 
   // Controladores para el formulario
   final TextEditingController _horaController = TextEditingController();
@@ -53,6 +61,44 @@ class _HorariosScreenState extends State<HorariosScreen> {
     setState(() {
       _materias = materias;
     });
+  }
+
+  Future<void> _seleccionarHora(BuildContext context) async {
+    // Obtenemos la hora actual del controlador si ya existe, o usamos la hora actual.
+    TimeOfDay horaInicial = TimeOfDay.now();
+    if (_horaController.text.isNotEmpty) {
+      try {
+        final parts = _horaController.text.split(':');
+        horaInicial = TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
+      } catch (e) {
+        // Si el formato es inválido, simplemente usa la hora actual.
+      }
+    }
+
+    // Muestra el selector de tiempo.
+    final TimeOfDay? horaSeleccionada = await showTimePicker(
+      context: context,
+      initialTime: horaInicial,
+      // Opcional: para forzar el formato de 24 horas y mejorar la consistencia.
+      builder: (BuildContext context, Widget? child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
+        );
+      },
+    );
+
+    // Si el usuario selecciona una hora (no presiona 'Cancelar').
+    if (horaSeleccionada != null) {
+      // Formateamos el resultado para que tenga siempre dos dígitos (ej. 09:05).
+      final String horaFormateada =
+          '${horaSeleccionada.hour.toString().padLeft(2, '0')}:${horaSeleccionada.minute.toString().padLeft(2, '0')}';
+
+      // Actualizamos el controlador del TextField.
+      setState(() {
+        _horaController.text = horaFormateada;
+      });
+    }
   }
 
   void _showAddHorarioDialog() {
@@ -114,7 +160,17 @@ class _HorariosScreenState extends State<HorariosScreen> {
 
               TextField(
                 controller: _horaController,
-                decoration: InputDecoration(labelText: 'Hora (HH:MM)'),
+                readOnly: true, // El usuario no puede escribir.
+                decoration: InputDecoration(
+                  labelText: 'Hora',
+                  hintText: 'Seleccione una hora',
+                  // Un ícono para indicar que es un campo de tiempo.
+                  suffixIcon: Icon(Icons.access_time_outlined),
+                ),
+                onTap: () {
+                  // Llama a nuestro método cuando el usuario toca el campo.
+                  _seleccionarHora(context);
+                },
               ),
 
               SizedBox(height: 8),
@@ -210,15 +266,27 @@ class _HorariosScreenState extends State<HorariosScreen> {
               ),
               TextField(
                 controller: _horaController,
-                decoration: InputDecoration(labelText: 'Hora (HH:MM)'),
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: 'Hora',
+                  suffixIcon: Icon(Icons.access_time_outlined),
+                ),
+                onTap: () {
+                  _seleccionarHora(context);
+                },
               ),
               TextField(
                 controller: _edificioController,
                 decoration: InputDecoration(labelText: 'Edificio'),
+                keyboardType: TextInputType.text,
               ),
               TextField(
                 controller: _salonController,
                 decoration: InputDecoration(labelText: 'Salón'),
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
               ),
             ],
           ),

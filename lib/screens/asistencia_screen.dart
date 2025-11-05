@@ -25,38 +25,38 @@ class _AsistenciaScreenState extends State<AsistenciaScreen> {
   @override
   void initState() {
     super.initState();
-    _loadData();
+    _cargarData();
   }
 
-  Future<void> _loadData() async {
-    await _loadAsistencias();
-    await _loadHorarios();
-    await _loadProfesores();
-    await _loadMaterias();
+  Future<void> _cargarData() async {
+    await _cargarAsistencias();
+    await _cargarHorarios();
+    await _cargarProfesores();
+    await _cargarMaterias();
   }
 
-  Future<void> _loadAsistencias() async {
+  Future<void> _cargarAsistencias() async {
     final asistencias = await _databaseHelper.getAsistencias();
     setState(() {
       _asistencias = asistencias;
     });
   }
 
-  Future<void> _loadHorarios() async {
+  Future<void> _cargarHorarios() async {
     final horarios = await _databaseHelper.getHorarios();
     setState(() {
       _horarios = horarios;
     });
   }
 
-  Future<void> _loadProfesores() async {
+  Future<void> _cargarProfesores() async {
     final profesores = await _databaseHelper.getProfesores();
     setState(() {
       _profesores = profesores;
     });
   }
 
-  Future<void> _loadMaterias() async {
+  Future<void> _cargarMaterias() async {
     final materias = await _databaseHelper.getMaterias();
     setState(() {
       _materias = materias;
@@ -64,14 +64,14 @@ class _AsistenciaScreenState extends State<AsistenciaScreen> {
   }
 
   void _showAddAsistenciaDialog() {
-    _clearForm();
+    _limpiarForm();
     _fechaController.text = _getCurrentDate();
 
     showDialog(
       context: context,
       builder: (dialogContext) {
 
-        bool asistenciaValue = _asistenciaValue;
+        bool asistenciaValue = true;
 
         return StatefulBuilder(
           builder: (context, setDialogState) {
@@ -92,7 +92,7 @@ class _AsistenciaScreenState extends State<AsistenciaScreen> {
                           value: horario.nhorario,
 
                           child: Text(
-                            _getHorarioDisplayText(horario),
+                            _getHorarioMostrarText(horario),
                             overflow: TextOverflow.ellipsis,
                           ),
                         );
@@ -141,7 +141,7 @@ class _AsistenciaScreenState extends State<AsistenciaScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    _addAsistencia();
+                    _addAsistencia(asistenciaValue);
                   },
                   child: Text('Registrar'),
                 ),
@@ -153,11 +153,10 @@ class _AsistenciaScreenState extends State<AsistenciaScreen> {
     );
   }
 
-
   void _showEditAsistenciaDialog(Asistencia asistencia) {
     _selectedHorario = asistencia.nhorario;
     _fechaController.text = asistencia.fecha;
-    _asistenciaValue = asistencia.asistencia;
+    bool valorAsistencia = asistencia.asistencia;
 
     showDialog(
       context: context,
@@ -174,7 +173,7 @@ class _AsistenciaScreenState extends State<AsistenciaScreen> {
                 items: _horarios.map((horario) {
                   return DropdownMenuItem(
                     value: horario.nhorario,
-                    child: Text(_getHorarioDisplayText(horario),
+                    child: Text(_getHorarioMostrarText(horario),
                       overflow: TextOverflow.ellipsis,
                     ),
                   );
@@ -202,14 +201,14 @@ class _AsistenciaScreenState extends State<AsistenciaScreen> {
                   Text('Asistencia:'),
                   SizedBox(width: 16),
                   Switch(
-                    value: _asistenciaValue,
+                    value: valorAsistencia,
                     onChanged: (value) {
                       setState(() {
-                        _asistenciaValue = value;
+                        valorAsistencia = value;
                       });
                     },
                   ),
-                  Text(_asistenciaValue ? 'Presente' : 'Ausente'),
+                  Text(valorAsistencia ? 'Presente' : 'Ausente'),
                 ],
               ),
             ],
@@ -229,7 +228,7 @@ class _AsistenciaScreenState extends State<AsistenciaScreen> {
     );
   }
 
-  void _addAsistencia() async {
+  void _addAsistencia(bool asiste) async {
     if (_selectedHorario == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Por favor seleccione un horario')),
@@ -247,13 +246,13 @@ class _AsistenciaScreenState extends State<AsistenciaScreen> {
     final asistencia = Asistencia(
       nhorario: _selectedHorario!,
       fecha: _fechaController.text,
-      asistencia: _asistenciaValue,
+      asistencia: asiste,
     );
 
     await _databaseHelper.insertAsistencia(asistencia);
-    _loadAsistencias();
+    _cargarAsistencias();
     Navigator.pop(context);
-    _clearForm();
+    _limpiarForm();
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Asistencia registrada exitosamente')),
@@ -279,13 +278,13 @@ class _AsistenciaScreenState extends State<AsistenciaScreen> {
       idasistencia: asistencia.idasistencia,
       nhorario: _selectedHorario!,
       fecha: _fechaController.text,
-      asistencia: _asistenciaValue,
+      asistencia: asistencia.asistencia,
     );
 
     await _databaseHelper.updateAsistencia(updatedAsistencia);
-    _loadAsistencias();
+    _cargarAsistencias();
     Navigator.pop(context);
-    _clearForm();
+    _limpiarForm();
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Asistencia actualizada exitosamente')),
@@ -306,7 +305,7 @@ class _AsistenciaScreenState extends State<AsistenciaScreen> {
           ElevatedButton(
             onPressed: () async {
               await _databaseHelper.deleteAsistencia(idasistencia);
-              _loadAsistencias();
+              _cargarAsistencias();
               Navigator.pop(context);
 
               ScaffoldMessenger.of(context).showSnackBar(
@@ -321,7 +320,7 @@ class _AsistenciaScreenState extends State<AsistenciaScreen> {
     );
   }
 
-  void _clearForm() {
+  void _limpiarForm() {
     _fechaController.clear();
     _selectedHorario = null;
     _asistenciaValue = true;
@@ -347,7 +346,7 @@ class _AsistenciaScreenState extends State<AsistenciaScreen> {
     }
   }
 
-  String _getHorarioDisplayText(Horario horario) {
+  String _getHorarioMostrarText(Horario horario) {
     final profesor = _profesores.firstWhere(
           (p) => p.nprofesor == horario.inprofesor,
       orElse: () => Profesor(nprofesor: '', nombre: 'No encontrado', carrera: ''),
@@ -361,7 +360,7 @@ class _AsistenciaScreenState extends State<AsistenciaScreen> {
     return '${profesor.nombre} - ${materia.descripcion} - ${horario.hora}';
   }
 
-  String _getAsistenciaDetails(Asistencia asistencia) {
+  String _getAsistenciaDetalles(Asistencia asistencia) {
     final horario = _horarios.firstWhere(
           (h) => h.nhorario == asistencia.nhorario,
       orElse: () => Horario(
@@ -451,7 +450,7 @@ class _AsistenciaScreenState extends State<AsistenciaScreen> {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(_getAsistenciaDetails(_asistencias[index])),
+                        Text(_getAsistenciaDetalles(_asistencias[index])),
                         Text(
                           'Asistencia: ${_asistencias[index].asistencia ? 'PRESENTE' : 'AUSENTE'}',
                           style: TextStyle(

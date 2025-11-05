@@ -39,6 +39,39 @@ class _ConsultasScreenState extends State<ConsultasScreen> {
     );
   }
 
+  Future<void> _seleccionarHora(BuildContext context) async {
+    TimeOfDay horaInicial = TimeOfDay.now();
+    if (_horaController.text.isNotEmpty) {
+      try {
+        final parts = _horaController.text.split(':');
+        if (parts.length == 2) {
+          horaInicial = TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
+        }
+      } catch (e) {
+      }
+    }
+
+    final TimeOfDay? horaSeleccionada = await showTimePicker(
+      context: context,
+      initialTime: horaInicial,
+      builder: (BuildContext context, Widget? child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
+        );
+      },
+    );
+
+    if (horaSeleccionada != null) {
+      final String horaFormateada =
+          '${horaSeleccionada.hour.toString().padLeft(2, '0')}:${horaSeleccionada.minute.toString().padLeft(2, '0')}';
+
+      setState(() {
+        _horaController.text = horaFormateada;
+      });
+    }
+  }
+
   Widget _buildConsulta1() {
     return Padding(
       padding: EdgeInsets.all(16),
@@ -49,7 +82,15 @@ class _ConsultasScreenState extends State<ConsultasScreen> {
               Expanded(
                 child: TextField(
                   controller: _horaController,
-                  decoration: InputDecoration(labelText: 'Hora (HH:MM)'),
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    labelText: 'Hora',
+                    hintText: 'Seleccione una hora',
+                    suffixIcon: Icon(Icons.access_time_outlined),
+                  ),
+                  onTap: () {
+                    _seleccionarHora(context);
+                  },
                 ),
               ),
               SizedBox(width: 10),
@@ -57,6 +98,7 @@ class _ConsultasScreenState extends State<ConsultasScreen> {
                 child: TextField(
                   controller: _edificioController,
                   decoration: InputDecoration(labelText: 'Edificio'),
+                  keyboardType: TextInputType.text,
                 ),
               ),
             ],
@@ -64,6 +106,12 @@ class _ConsultasScreenState extends State<ConsultasScreen> {
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () async {
+              if (_horaController.text.isEmpty || _edificioController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Por favor, complete ambos campos para buscar.')),
+                );
+                return;
+              }
               final resultados = await _databaseHelper.getProfesoresPorHoraEdificio(
                 _horaController.text,
                 _edificioController.text,
@@ -95,6 +143,12 @@ class _ConsultasScreenState extends State<ConsultasScreen> {
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () async {
+              if (_fechaController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Por favor, complete el campo para buscar.')),
+                );
+                return;
+              }
               final resultados = await _databaseHelper.getAsistenciaPorFecha(_fechaController.text);
               setState(() {
                 _resultados = resultados;
@@ -118,7 +172,7 @@ class _ConsultasScreenState extends State<ConsultasScreen> {
         children: [
           ElevatedButton(
             onPressed: () async {
-              final resultados = await _databaseHelper.getResumenAsistencia('2024-01-01', '2024-12-31');
+              final resultados = await _databaseHelper.getResumenAsistencia('2025-01-01', '2025-12-31');
               setState(() {
                 _resultados = resultados;
               });

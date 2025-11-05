@@ -6,26 +6,18 @@ import '../models/horario.dart';
 import '../models/asistencia.dart';
 
 class DatabaseHelper {
-  static final DatabaseHelper _instance = DatabaseHelper._internal();
-  factory DatabaseHelper() => _instance;
-  static Database? _database;
 
-  DatabaseHelper._internal();
-
-  Future<Database> get database async {
-    if (_database != null) return _database!;
-    _database = await _initDatabase();
-    return _database!;
-  }
-
-  Future<Database> _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'asistencia.db');
-    return await openDatabase(
-      path,
-      version: 1,
+  Future<Database>conexion() async {
+    return openDatabase(
+      join(await getDatabasesPath(), 'asistencia.db'),
       onCreate: _onCreate,
+      version: 1,
+        onConfigure: (db){
+          return db.execute("PRAGMA foreign_keys = ON");
+        }
     );
   }
+
 
   Future<void> _onCreate(Database db, int version) async {
     // Tabla MATERIA
@@ -73,18 +65,18 @@ class DatabaseHelper {
 
   // CRUD para MATERIA
   Future<int> insertMateria(Materia materia) async {
-    final db = await database;
+    final db = await conexion();
     return await db.insert('materia', materia.toMap());
   }
 
   Future<List<Materia>> getMaterias() async {
-    final db = await database;
+    final db = await conexion();
     final List<Map<String, dynamic>> maps = await db.query('materia');
     return List.generate(maps.length, (i) => Materia.fromMap(maps[i]));
   }
 
   Future<int> updateMateria(Materia materia) async {
-    final db = await database;
+    final db = await conexion();
     return await db.update(
       'materia',
       materia.toMap(),
@@ -94,7 +86,7 @@ class DatabaseHelper {
   }
 
   Future<int> deleteMateria(int nmat) async {
-    final db = await database;
+    final db = await conexion();
     return await db.delete(
       'materia',
       where: 'nmat = ?',
@@ -104,18 +96,18 @@ class DatabaseHelper {
 
   // CRUD para PROFESOR
   Future<int> insertProfesor(Profesor profesor) async {
-    final db = await database;
+    final db = await conexion();
     return await db.insert('profesor', profesor.toMap());
   }
 
   Future<List<Profesor>> getProfesores() async {
-    final db = await database;
+    final db = await conexion();
     final List<Map<String, dynamic>> maps = await db.query('profesor');
     return List.generate(maps.length, (i) => Profesor.fromMap(maps[i]));
   }
 
   Future<Profesor?> getUltimoProfesor() async {
-    final db = await database;
+    final db = await conexion();
     // Hacemos una consulta para obtener todos los profesores,
     // los ordenamos por 'nprofesor' de forma descendente (los más altos primero)
     // y tomamos solo el primer resultado (LIMIT 1).
@@ -133,7 +125,7 @@ class DatabaseHelper {
   }
 
   Future<int> updateProfesor(Profesor profesor) async {
-    final db = await database;
+    final db = await conexion();
     return await db.update(
       'profesor',
       profesor.toMap(),
@@ -143,7 +135,7 @@ class DatabaseHelper {
   }
 
   Future<int> deleteProfesor(String nprofesor) async {
-    final db = await database;
+    final db = await conexion();
     return await db.delete(
       'profesor',
       where: 'nprofesor = ?',
@@ -153,18 +145,18 @@ class DatabaseHelper {
 
   // CRUD para HORARIO
   Future<int> insertHorario(Horario horario) async {
-    final db = await database;
+    final db = await conexion();
     return await db.insert('horario', horario.toMap());
   }
 
   Future<List<Horario>> getHorarios() async {
-    final db = await database;
+    final db = await conexion();
     final List<Map<String, dynamic>> maps = await db.query('horario');
     return List.generate(maps.length, (i) => Horario.fromMap(maps[i]));
   }
 
   Future<int> updateHorario(Horario horario) async {
-    final db = await database;
+    final db = await conexion();
     return await db.update(
       'horario',
       horario.toMap(),
@@ -174,7 +166,7 @@ class DatabaseHelper {
   }
 
   Future<int> deleteHorario(int nhorario) async {
-    final db = await database;
+    final db = await conexion();
     return await db.delete(
       'horario',
       where: 'nhorario = ?',
@@ -184,18 +176,18 @@ class DatabaseHelper {
 
   // CRUD para ASISTENCIA
   Future<int> insertAsistencia(Asistencia asistencia) async {
-    final db = await database;
+    final db = await conexion();
     return await db.insert('asistencia', asistencia.toMap());
   }
 
   Future<List<Asistencia>> getAsistencias() async {
-    final db = await database;
+    final db = await conexion();
     final List<Map<String, dynamic>> maps = await db.query('asistencia');
     return List.generate(maps.length, (i) => Asistencia.fromMap(maps[i]));
   }
 
   Future<int> updateAsistencia(Asistencia asistencia) async {
-    final db = await database;
+    final db = await conexion();
     return await db.update(
       'asistencia',
       asistencia.toMap(),
@@ -205,7 +197,7 @@ class DatabaseHelper {
   }
 
   Future<int> deleteAsistencia(int idasistencia) async {
-    final db = await database;
+    final db = await conexion();
     return await db.delete(
       'asistencia',
       where: 'idasistencia = ?',
@@ -216,7 +208,7 @@ class DatabaseHelper {
   // CONSULTAS AVANZADAS
   // 1. Profesores con clase a cierta hora en edificio específico
   Future<List<Map<String, dynamic>>> getProfesoresPorHoraEdificio(String hora, String edificio) async {
-    final db = await database;
+    final db = await conexion();
     return await db.rawQuery('''
       SELECT p.nombre, p.carrera, h.hora, h.edificio, h.salon, m.descripcion as materia
       FROM profesor p
@@ -228,7 +220,7 @@ class DatabaseHelper {
 
   // 2. Profesores que asistieron en fecha específica
   Future<List<Map<String, dynamic>>> getAsistenciaPorFecha(String fecha) async {
-    final db = await database;
+    final db = await conexion();
     return await db.rawQuery('''
       SELECT p.nombre, p.carrera, h.hora, h.edificio, h.salon, m.descripcion as materia
       FROM profesor p
@@ -241,7 +233,7 @@ class DatabaseHelper {
 
   // 3. Resumen de asistencia por profesor en rango de fechas
   Future<List<Map<String, dynamic>>> getResumenAsistencia(String fechaInicio, String fechaFin) async {
-    final db = await database;
+    final db = await conexion();
     return await db.rawQuery('''
       SELECT 
         p.nombre,
